@@ -15,6 +15,7 @@ function help
 }
 function resource
 {
+    mkdir -p ${resOutputDir}
     echo
     echo "Extracting resources from APK file"
     apktoolPath=${projectDir}/apktool
@@ -27,13 +28,19 @@ function resource
 }
 function src
 {
+    mkdir -p ${srcOutputDir}
     echo
     echo "Extracting JAR file from APK and get the Java files"
     dex2jarPath=${projectDir}/dex2jar
     chmod a+x ${dex2jarPath}/*.bat ${dex2jarPath}/*.sh
+    echo
+    echo "Begin use dex2jar"
     sh ${dex2jarPath}/d2j-dex2jar.sh -o ${outputDir}/output.jar ${apkfile}
-    java -jar ${projectDir}/jd-core-java/jd-core-java-1.2.jar ${outputDir}/output.jar ${srcOutputDir}
-    rm -f ${outputDir}/output.jar
+    echo
+    echo "Begin use jd-core"
+    #java -jar ${projectDir}/jd-core-java/jd-core-java-1.2.jar ${outputDir}/output.jar ${srcOutputDir}
+    cd ${srcOutputDir} && jar xvf ${outputDir}/output.jar && cd ..
+    # rm -f ${outputDir}/output.jar
 }
 getResource=false
 getRrc=false
